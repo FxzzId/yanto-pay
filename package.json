@@ -1,8 +1,9 @@
 {
   "name": "yanto-pay",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "QRIS Payment Gateway - YANTO PAY",
   "dependencies": {
-    "puppeteer-core": "^21.0.0"
+    "puppeteer-core": "^21.0.0",
+    "@sparticuz/chromium": "^121.0.0"
   }
 }
