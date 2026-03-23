@@ -5,28 +5,141 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>YANTO PAY - Top Up DANA</title>
     <style>
-        *{margin:0;padding:0;box-sizing:border-box}
-        body{background:linear-gradient(145deg,#0a1f2c 0%,#05161f 100%);font-family:'Inter',system-ui,sans-serif;min-height:100vh;padding:24px;display:flex;align-items:center;justify-content:center}
-        .container{max-width:580px;width:100%;background:#fff;border-radius:48px;box-shadow:0 30px 60px rgba(0,0,0,0.3);overflow:hidden}
-        .header{background:linear-gradient(115deg,#0e3b5e,#0b2c44);padding:32px 28px;text-align:center}
-        .header h1{color:#fff;font-size:2rem;font-weight:800}
-        .header p{color:rgba(255,255,255,0.85);font-size:.9rem}
-        .content{padding:28px 24px}
-        .info-card{background:#f0f6fe;border-radius:28px;padding:14px 20px;margin-bottom:28px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap}
-        .dana-number{font-size:1.2rem;font-weight:800;color:#0e3b5e;background:#fff;padding:6px 16px;border-radius:60px;font-family:monospace}
-        .amount-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
-        .amount-btn{background:#f2f5f9;border:1.5px solid #e2e8f0;padding:14px 6px;border-radius:48px;font-weight:700;cursor:pointer;text-align:center}
-        .amount-btn.active{background:#0e3b5e;border-color:#0e3b5e;color:#fff}
-        .pay-btn{width:100%;background:linear-gradient(105deg,#0e3b5e,#0a2c44);border:none;padding:16px;border-radius:60px;color:#fff;font-weight:800;cursor:pointer;margin:20px 0}
-        .qr-wrapper{text-align:center;border:2px solid #eef2f8;border-radius:32px;padding:24px;margin-top:12px}
-        .qr-image{max-width:280px;width:100%;margin:0 auto;display:block}
-        .status-text{font-size:.75rem;color:#3b6e9e;margin-top:12px}
-        .loading{color:#0e3b5e;font-weight:600;padding:16px;text-align:center}
-        .footer{background:#f9fbfd;padding:18px;text-align:center;font-size:.7rem;color:#7f9cbb;border-top:1px solid #eef2f8}
-        .trx-detail{background:#f8fafc;border-radius:24px;padding:16px;margin-top:16px}
-        .trx-row{display:flex;justify-content:space-between;margin-bottom:8px}
-        .trx-label{color:#4b6f8e}
-        .trx-value{font-weight:700;color:#0e3b5e}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: linear-gradient(145deg, #0a1f2c 0%, #05161f 100%);
+            font-family: 'Inter', system-ui, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+        .container {
+            max-width: 580px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 48px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(115deg, #0e3b5e, #0b2c44);
+            padding: 32px 28px;
+            text-align: center;
+        }
+        .header h1 {
+            color: white;
+            font-size: 2rem;
+            font-weight: 800;
+        }
+        .header p {
+            color: rgba(255,255,255,0.85);
+            font-size: 0.9rem;
+        }
+        .content {
+            padding: 28px 24px;
+        }
+        .info-card {
+            background: #f0f6fe;
+            border-radius: 28px;
+            padding: 14px 20px;
+            margin-bottom: 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .dana-number {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #0e3b5e;
+            background: white;
+            padding: 6px 16px;
+            border-radius: 60px;
+            font-family: monospace;
+        }
+        .amount-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .amount-btn {
+            background: #f2f5f9;
+            border: 1.5px solid #e2e8f0;
+            padding: 14px 6px;
+            border-radius: 48px;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .amount-btn.active {
+            background: #0e3b5e;
+            border-color: #0e3b5e;
+            color: white;
+        }
+        .pay-btn {
+            width: 100%;
+            background: linear-gradient(105deg, #0e3b5e, #0a2c44);
+            border: none;
+            padding: 16px;
+            border-radius: 60px;
+            color: white;
+            font-weight: 800;
+            cursor: pointer;
+            margin: 20px 0;
+            transition: all 0.2s;
+        }
+        .pay-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(14,59,94,0.3);
+        }
+        .footer {
+            background: #f9fbfd;
+            padding: 18px;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #7f9cbb;
+            border-top: 1px solid #eef2f8;
+        }
+        .maintenance-card {
+            background: #fef3c7;
+            border: 2px solid #f59e0b;
+            border-radius: 32px;
+            padding: 24px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .maintenance-title {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #b45309;
+            margin-bottom: 12px;
+        }
+        .countdown {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #0e3b5e;
+            font-family: monospace;
+            background: white;
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 60px;
+            margin: 12px 0;
+        }
+        .maintenance-text {
+            font-size: 0.8rem;
+            color: #92400e;
+        }
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -40,63 +153,158 @@
             <span>✅ Nomor DANA Tujuan</span>
             <span class="dana-number">0896-7604-1776</span>
         </div>
-        <div class="amount-grid" id="amountGrid">
-            <div class="amount-btn" data-amount="1000">Rp 1.000</div>
-            <div class="amount-btn" data-amount="2000">Rp 2.000</div>
-            <div class="amount-btn" data-amount="3000">Rp 3.000</div>
-            <div class="amount-btn" data-amount="4000">Rp 4.000</div>
-            <div class="amount-btn" data-amount="5000">Rp 5.000</div>
-            <div class="amount-btn" data-amount="10000">Rp 10.000</div>
-            <div class="amount-btn" data-amount="20000">Rp 20.000</div>
-            <div class="amount-btn" data-amount="25000">Rp 25.000</div>
-            <div class="amount-btn" data-amount="50000">Rp 50.000</div>
-            <div class="amount-btn" data-amount="75000">Rp 75.000</div>
-            <div class="amount-btn" data-amount="100000">Rp 100.000</div>
+
+        <!-- Maintenance Alert -->
+        <div id="maintenanceAlert" class="maintenance-card hidden">
+            <div class="maintenance-title">⚠️ SISTEM MAINTENANCE ⚠️</div>
+            <div>Hotelmurah.com sedang maintenance</div>
+            <div class="countdown" id="countdownTimer">--:--:--</div>
+            <div class="maintenance-text">
+                Maintenance rutin setiap hari pukul 21:00 - 06:00 WIB<br>
+                Akan kembali online dalam hitungan di atas
+            </div>
         </div>
-        <button id="generateBtn" class="pay-btn">💸 GENERATE QRIS</button>
-        <div id="qrContainer" class="qr-wrapper" style="display:none">
-            <img id="qrImage" class="qr-image" src="" alt="QRIS">
-            <div class="status-text" id="qrStatus"></div>
-            <div id="trxDetail" class="trx-detail" style="display:none"></div>
+
+        <!-- Normal Content (hidden saat maintenance) -->
+        <div id="normalContent">
+            <div class="amount-grid" id="amountGrid">
+                <div class="amount-btn" data-amount="1000">Rp 1.000</div>
+                <div class="amount-btn" data-amount="2000">Rp 2.000</div>
+                <div class="amount-btn" data-amount="3000">Rp 3.000</div>
+                <div class="amount-btn" data-amount="4000">Rp 4.000</div>
+                <div class="amount-btn" data-amount="5000">Rp 5.000</div>
+                <div class="amount-btn" data-amount="10000">Rp 10.000</div>
+                <div class="amount-btn" data-amount="20000">Rp 20.000</div>
+                <div class="amount-btn" data-amount="25000">Rp 25.000</div>
+                <div class="amount-btn" data-amount="50000">Rp 50.000</div>
+                <div class="amount-btn" data-amount="75000">Rp 75.000</div>
+                <div class="amount-btn" data-amount="100000">Rp 100.000</div>
+            </div>
+            <button id="payBtn" class="pay-btn">💸 BAYAR SEKARANG</button>
         </div>
-        <div id="loading" class="loading" style="display:none">⏳ Mengambil QRIS...</div>
     </div>
-    <div class="footer">© 2025 YANTO PAY • QRIS langsung dari hotelmurah.com</div>
+    <div class="footer">© 2025 YANTO PAY • QRIS dari Hotelmurah.com</div>
 </div>
+
 <script>
     const DANA_NUMBER = "089676041776";
-    const API_URL = "/api/qris";
-    let selectedAmount = 10000;
-    const amountBtns = document.querySelectorAll('.amount-btn');
-    const generateBtn = document.getElementById('generateBtn');
-    const qrContainer = document.getElementById('qrContainer');
-    const qrImage = document.getElementById('qrImage');
-    const qrStatus = document.getElementById('qrStatus');
-    const trxDetail = document.getElementById('trxDetail');
-    const loadingDiv = document.getElementById('loading');
+    const HOTEL_URL = "https://hotelmurah.com/pulsa/top-up-dana";
 
-    function formatRupiah(angka){return new Intl.NumberFormat('id-ID').format(angka);}
-    function updateActiveButton(amount){
-        amountBtns.forEach(btn=>{let btnAmt=parseInt(btn.dataset.amount);btnAmt===amount?btn.classList.add('active'):btn.classList.remove('active');});
+    let selectedAmount = 10000;
+    let maintenanceInterval = null;
+
+    // Cek apakah sedang maintenance (21:00 - 06:00 WIB)
+    function isMaintenanceTime() {
+        const now = new Date();
+        const hours = now.getHours();
+        // Maintenance jam 21:00 sampai 06:00
+        return (hours >= 21 || hours < 6);
     }
-    async function generateQRIS(amount){
-        if(!amount||amount<1000){alert("Pilih nominal terlebih dahulu");return false;}
-        loadingDiv.style.display='block';qrContainer.style.display='none';trxDetail.style.display='none';
-        try{
-            const resp=await fetch(`${API_URL}?amount=${amount}&phone=${DANA_NUMBER}`);
-            const data=await resp.json();
-            if(data.success&&data.qrUrl){
-                qrImage.src=data.qrUrl;
-                trxDetail.innerHTML=`<div class="trx-row"><span class="trx-label">Trx ID</span><span class="trx-value">${data.trxId}</span></div><div class="trx-row"><span class="trx-label">Jumlah</span><span class="trx-value">Rp ${formatRupiah(data.nominal||amount)}</span></div><div class="trx-row"><span class="trx-label">Biaya Admin</span><span class="trx-value">Rp ${formatRupiah(data.fee)}</span></div><div class="trx-row"><span class="trx-label">Total</span><span class="trx-value">Rp ${formatRupiah(data.total)}</span></div>`;
-                qrStatus.innerHTML=`✅ Scan QRIS dengan DANA / GoPay / OVO. Total Rp ${formatRupiah(data.total)} akan masuk ke DANA ${DANA_NUMBER}.`;
-                qrContainer.style.display='block';trxDetail.style.display='block';
-            }else{throw new Error(data.error||'Gagal mendapatkan QRIS');}
-        }catch(e){alert('Gagal generate QRIS: '+e.message);console.error(e);}
-        finally{loadingDiv.style.display='none';}
+
+    // Hitung detik sampai maintenance selesai (06:00)
+    function getSecondsUntilMaintenanceEnds() {
+        const now = new Date();
+        let target = new Date(now);
+        target.setHours(6, 0, 0, 0); // 06:00:00
+        
+        if (now.getHours() >= 21) {
+            // Jika sudah lewat jam 21, target besok jam 6
+            target.setDate(target.getDate() + 1);
+        }
+        
+        return Math.floor((target - now) / 1000);
     }
-    amountBtns.forEach(btn=>{btn.addEventListener('click',()=>{selectedAmount=parseInt(btn.dataset.amount);updateActiveButton(selectedAmount);});});
-    generateBtn.addEventListener('click',()=>{generateQRIS(selectedAmount);});
+
+    // Format detik ke HH:MM:SS
+    function formatTime(seconds) {
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        const secs = seconds % 60;
+        return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    // Update countdown timer
+    function updateCountdown() {
+        const secondsLeft = getSecondsUntilMaintenanceEnds();
+        const timerElement = document.getElementById('countdownTimer');
+        if (timerElement) {
+            timerElement.textContent = formatTime(secondsLeft);
+        }
+        
+        // Jika maintenance selesai, reload halaman
+        if (!isMaintenanceTime()) {
+            if (maintenanceInterval) clearInterval(maintenanceInterval);
+            location.reload();
+        }
+    }
+
+    // Setup maintenance mode
+    function setupMaintenanceMode() {
+        const maintenanceAlert = document.getElementById('maintenanceAlert');
+        const normalContent = document.getElementById('normalContent');
+        
+        if (maintenanceAlert && normalContent) {
+            maintenanceAlert.classList.remove('hidden');
+            normalContent.classList.add('hidden');
+            
+            updateCountdown();
+            maintenanceInterval = setInterval(updateCountdown, 1000);
+        }
+    }
+
+    // Setup normal mode
+    function setupNormalMode() {
+        const maintenanceAlert = document.getElementById('maintenanceAlert');
+        const normalContent = document.getElementById('normalContent');
+        
+        if (maintenanceAlert && normalContent) {
+            maintenanceAlert.classList.add('hidden');
+            normalContent.classList.remove('hidden');
+        }
+        
+        if (maintenanceInterval) clearInterval(maintenanceInterval);
+    }
+
+    // Redirect ke hotelmurah.com
+    function redirectToPayment() {
+        const url = `${HOTEL_URL}?phone=${DANA_NUMBER}`;
+        window.open(url, '_blank');
+    }
+
+    // Event listeners untuk nominal
+    const amountBtns = document.querySelectorAll('.amount-btn');
+    const payBtn = document.getElementById('payBtn');
+
+    function updateActiveButton(amount) {
+        amountBtns.forEach(btn => {
+            const btnAmount = parseInt(btn.getAttribute('data-amount'));
+            if (btnAmount === amount) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+    }
+
+    amountBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            selectedAmount = parseInt(btn.getAttribute('data-amount'));
+            updateActiveButton(selectedAmount);
+        });
+    });
+
+    if (payBtn) {
+        payBtn.addEventListener('click', redirectToPayment);
+    }
+
+    // Inisialisasi berdasarkan waktu
+    if (isMaintenanceTime()) {
+        setupMaintenanceMode();
+    } else {
+        setupNormalMode();
+    }
+    
     updateActiveButton(10000);
 </script>
 </body>
-  </html>
+</html>
