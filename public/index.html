@@ -23,7 +23,7 @@
             overflow-x: hidden;
         }
 
-        /* floating particles */
+        /* floating particles (lebih ringan) */
         .floating-bg {
             position: fixed;
             top: 0;
@@ -35,227 +35,170 @@
         }
         .floating-bg span {
             position: absolute;
-            background: rgba(14, 59, 94, 0.15);
+            background: rgba(14, 59, 94, 0.1);
             border-radius: 50%;
-            animation: floatAnim 12s infinite ease-in-out;
+            animation: floatAnim 15s infinite ease-in-out;
         }
         @keyframes floatAnim {
-            0% { transform: translateY(0) rotate(0deg); opacity: 0.3; }
-            50% { transform: translateY(-40px) rotate(5deg); opacity: 0.6; }
-            100% { transform: translateY(0) rotate(0deg); opacity: 0.3; }
+            0% { transform: translateY(0) rotate(0deg); opacity: 0.2; }
+            100% { transform: translateY(-30px) rotate(4deg); opacity: 0.4; }
         }
 
         .container {
-            max-width: 620px;
+            max-width: 600px;
             width: 100%;
             background: rgba(255, 255, 255, 0.96);
             backdrop-filter: blur(2px);
-            border-radius: 56px;
-            box-shadow: 0 30px 50px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+            border-radius: 48px;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.2) inset;
             overflow: hidden;
             position: relative;
             z-index: 10;
-            transition: transform 0.3s ease, box-shadow 0.3s;
-            animation: containerGlow 3s infinite alternate;
-        }
-        @keyframes containerGlow {
-            0% { box-shadow: 0 30px 50px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(14, 59, 94, 0.2) inset; }
-            100% { box-shadow: 0 35px 60px rgba(14, 59, 94, 0.4), 0 0 0 2px rgba(14, 59, 94, 0.4) inset; }
         }
 
         .header {
             background: linear-gradient(125deg, #0e3b5e, #0b2c44);
-            padding: 32px 28px 28px;
+            padding: 28px 24px 24px;
             text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        .header::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -20%;
-            width: 140%;
-            height: 140%;
-            background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
-            animation: subtleShine 6s infinite;
-        }
-        @keyframes subtleShine {
-            0% { transform: translateX(-10%) translateY(-10%); opacity: 0.4; }
-            100% { transform: translateX(10%) translateY(10%); opacity: 0.8; }
         }
         .header h1 {
             color: white;
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: 800;
             letter-spacing: -0.5px;
-            text-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            position: relative;
         }
         .header p {
             color: rgba(255,255,255,0.85);
-            font-size: 0.85rem;
-            margin-top: 8px;
-            font-weight: 500;
+            font-size: 0.8rem;
+            margin-top: 6px;
         }
 
         .content {
-            padding: 32px 28px 28px;
+            padding: 28px 24px 24px;
         }
 
-        /* kotak info dengan grid animasi */
+        /* info card */
         .info-card {
             background: linear-gradient(135deg, #f0f6fe, #e9f0f8);
             border-radius: 32px;
-            padding: 18px 24px;
-            margin-bottom: 32px;
+            padding: 16px 20px;
+            margin-bottom: 28px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 12px;
-            box-shadow: 0 10px 20px -5px rgba(0,0,0,0.05);
+            gap: 10px;
             border: 1px solid rgba(14, 59, 94, 0.2);
-            transition: all 0.3s;
         }
         .dana-number {
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             font-weight: 800;
             background: white;
-            padding: 6px 20px;
+            padding: 5px 18px;
             border-radius: 60px;
             color: #0e3b5e;
             font-family: monospace;
-            letter-spacing: 1px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
 
-        /* grid nominal dengan efek kotak */
+        /* grid nominal */
         .amount-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 14px;
-            margin-bottom: 28px;
+            gap: 12px;
+            margin-bottom: 24px;
         }
         .amount-btn {
             background: #f8fafd;
             border: 2px solid #e2edf5;
-            padding: 16px 6px;
+            padding: 12px 4px;
             border-radius: 60px;
-            font-weight: 800;
-            font-size: 0.95rem;
+            font-weight: 700;
+            font-size: 0.9rem;
             color: #1f3b4c;
             cursor: pointer;
             text-align: center;
-            transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            position: relative;
-            overflow: hidden;
+            transition: all 0.2s;
         }
-        .amount-btn::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(14,59,94,0.08), transparent);
-            transition: left 0.5s;
-        }
-        .amount-btn:hover::after { left: 100%; }
         .amount-btn.active {
             background: linear-gradient(105deg, #0e3b5e, #0f5179);
             border-color: #0e3b5e;
             color: white;
-            box-shadow: 0 8px 20px rgba(14, 59, 94, 0.3);
-            transform: scale(0.98);
+            box-shadow: 0 6px 14px rgba(14, 59, 94, 0.2);
         }
 
         .pay-btn {
             width: 100%;
             background: linear-gradient(105deg, #0e3b5e, #0f5179);
             border: none;
-            padding: 18px;
+            padding: 16px;
             border-radius: 60px;
             color: white;
             font-weight: 800;
-            font-size: 1.1rem;
+            font-size: 1rem;
             cursor: pointer;
             transition: all 0.2s;
             margin: 8px 0 12px;
-            box-shadow: 0 12px 20px -8px rgba(14, 59, 94, 0.4);
-            position: relative;
-            overflow: hidden;
-        }
-        .pay-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 20px 28px -8px #0e3b5e;
+            box-shadow: 0 8px 18px -6px rgba(14, 59, 94, 0.4);
         }
         .pay-btn:active {
-            transform: translateY(2px);
+            transform: scale(0.98);
         }
 
-        /* maintenance card dengan kotak glow & animasi angka */
+        /* maintenance card (ringan, font jam lebih kecil) */
         .maintenance-card {
             background: rgba(255, 245, 220, 0.98);
-            border-radius: 40px;
-            padding: 28px 20px;
+            border-radius: 36px;
+            padding: 22px 16px;
             text-align: center;
             margin-bottom: 20px;
             border: 1px solid #fbc48d;
-            box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.3), 0 15px 30px rgba(0,0,0,0.1);
-            animation: softPulse 2s infinite;
-        }
-        @keyframes softPulse {
-            0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.2); }
-            70% { box-shadow: 0 0 0 8px rgba(245, 158, 11, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
         }
         .maintenance-title {
-            font-size: 1.4rem;
+            font-size: 1.2rem;
             font-weight: 800;
             color: #b45309;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
         }
         .countdown {
-            font-size: 2.8rem;
-            font-weight: 800;
-            font-family: 'Fira Mono', monospace;
+            font-size: 1.9rem;
+            font-weight: 700;
+            font-family: monospace;
             background: #1e293b;
             color: #facc15;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            padding: 12px 28px;
-            border-radius: 80px;
-            margin: 16px 0;
-            letter-spacing: 4px;
-            box-shadow: 0 0 12px rgba(250, 204, 21, 0.4), inset 0 0 2px white;
-            transition: all 0.1s ease-out;
+            gap: 6px;
+            padding: 8px 22px;
+            border-radius: 60px;
+            margin: 14px 0;
+            letter-spacing: 2px;
+            box-shadow: 0 0 8px rgba(250, 204, 21, 0.3);
         }
         .countdown span {
-            transition: transform 0.2s cubic-bezier(0.34, 1.2, 0.64, 1);
+            transition: transform 0.12s ease;
             display: inline-block;
+            min-width: 24px;
+            text-align: center;
         }
-        .countdown .digit-flip {
+        .digit-flip {
             transform: scale(1.08);
             text-shadow: 0 0 6px #facc15;
         }
         .maintenance-text {
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             color: #92400e;
-            margin-top: 8px;
         }
 
         .footer {
             background: #f9fbfe;
-            padding: 20px;
+            padding: 16px;
             text-align: center;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             color: #7f9cbb;
             border-top: 1px solid #eef2f8;
         }
@@ -267,7 +210,7 @@
 <body>
 <div class="floating-bg" id="floatingBg"></div>
 
-<div class="container" id="mainContainer">
+<div class="container">
     <div class="header">
         <h1>⚡ YANTO PAY</h1>
         <p>Top Up DANA • QRIS Otomatis</p>
@@ -278,7 +221,7 @@
             <span class="dana-number">0896-7604-1776</span>
         </div>
 
-        <!-- Maintenance alert (style modern) -->
+        <!-- maintenance alert -->
         <div id="maintenanceAlert" class="maintenance-card hidden">
             <div class="maintenance-title">
                 <span>⚠️</span> SISTEM MAINTENANCE <span>⚠️</span>
@@ -290,15 +233,163 @@
                 <span id="secTens">0</span><span id="secOnes">0</span>
             </div>
             <div class="maintenance-text">
-                Maintenance rutin setiap hari 21:00 - 06:00 WIB<br>
+                Maintenance setiap hari 21:00 - 06:00 WIB<br>
                 Akan kembali otomatis setelah hitung mundur selesai
             </div>
         </div>
 
-        <!-- Normal content -->
+        <!-- normal content -->
         <div id="normalContent">
             <div class="amount-grid" id="amountGrid">
                 <div class="amount-btn" data-amount="1000">Rp 1.000</div>
+                <div class="amount-btn" data-amount="2000">Rp 2.000</div>
+                <div class="amount-btn" data-amount="3000">Rp 3.000</div>
+                <div class="amount-btn" data-amount="4000">Rp 4.000</div>
+                <div class="amount-btn" data-amount="5000">Rp 5.000</div>
+                <div class="amount-btn" data-amount="10000">Rp 10.000</div>
+                <div class="amount-btn" data-amount="20000">Rp 20.000</div>
+                <div class="amount-btn" data-amount="25000">Rp 25.000</div>
+                <div class="amount-btn" data-amount="50000">Rp 50.000</div>
+                <div class="amount-btn" data-amount="75000">Rp 75.000</div>
+                <div class="amount-btn" data-amount="100000">Rp 100.000</div>
+            </div>
+            <button id="payBtn" class="pay-btn">💸 BAYAR SEKARANG</button>
+        </div>
+    </div>
+    <div class="footer">© 2025 YANTO PAY • QRIS via Hotelmurah.com</div>
+</div>
+
+<script>
+    (function() {
+        const DANA_NUMBER = "089676041776";
+        const HOTEL_URL = "https://hotelmurah.com/pulsa/top-up-dana";
+        let selectedAmount = 10000;
+        let maintenanceInterval = null;
+
+        function isMaintenanceTime() {
+            const h = new Date().getHours();
+            return (h >= 21 || h < 6);
+        }
+
+        function getSecondsUntilMaintenanceEnds() {
+            const now = new Date();
+            let target = new Date(now);
+            target.setHours(6, 0, 0, 0);
+            if (now.getHours() >= 21) target.setDate(target.getDate() + 1);
+            return Math.floor((target - now) / 1000);
+        }
+
+        function formatDigits(sec) {
+            const hrs = Math.floor(sec / 3600);
+            const mins = Math.floor((sec % 3600) / 60);
+            const secs = sec % 60;
+            return {
+                hourTens: Math.floor(hrs / 10),
+                hourOnes: hrs % 10,
+                minTens: Math.floor(mins / 10),
+                minOnes: mins % 10,
+                secTens: Math.floor(secs / 10),
+                secOnes: secs % 10
+            };
+        }
+
+        function animateDigit(el, newVal) {
+            if (!el) return;
+            const old = el.innerText;
+            if (old !== newVal.toString()) {
+                el.classList.add('digit-flip');
+                el.innerText = newVal;
+                setTimeout(() => el.classList.remove('digit-flip'), 130);
+            } else {
+                el.innerText = newVal;
+            }
+        }
+
+        function updateCountdownUI() {
+            const seconds = getSecondsUntilMaintenanceEnds();
+            const d = formatDigits(seconds);
+            animateDigit(document.getElementById('hourTens'), d.hourTens);
+            animateDigit(document.getElementById('hourOnes'), d.hourOnes);
+            animateDigit(document.getElementById('minTens'), d.minTens);
+            animateDigit(document.getElementById('minOnes'), d.minOnes);
+            animateDigit(document.getElementById('secTens'), d.secTens);
+            animateDigit(document.getElementById('secOnes'), d.secOnes);
+        }
+
+        function startMaintenanceMode() {
+            const alertDiv = document.getElementById('maintenanceAlert');
+            const normalDiv = document.getElementById('normalContent');
+            if (alertDiv) alertDiv.classList.remove('hidden');
+            if (normalDiv) normalDiv.classList.add('hidden');
+            if (maintenanceInterval) clearInterval(maintenanceInterval);
+            updateCountdownUI();
+            maintenanceInterval = setInterval(() => {
+                if (!isMaintenanceTime()) {
+                    if (maintenanceInterval) clearInterval(maintenanceInterval);
+                    window.location.reload();
+                    return;
+                }
+                updateCountdownUI();
+            }, 1000);
+        }
+
+        function startNormalMode() {
+            const alertDiv = document.getElementById('maintenanceAlert');
+            const normalDiv = document.getElementById('normalContent');
+            if (alertDiv) alertDiv.classList.add('hidden');
+            if (normalDiv) normalDiv.classList.remove('hidden');
+            if (maintenanceInterval) clearInterval(maintenanceInterval);
+        }
+
+        function redirectToPayment() {
+            window.open(`${HOTEL_URL}?phone=${DANA_NUMBER}`, '_blank');
+        }
+
+        // nominal & tombol
+        const amountBtns = document.querySelectorAll('.amount-btn');
+        const payBtn = document.getElementById('payBtn');
+        function updateActive(amount) {
+            amountBtns.forEach(btn => {
+                const val = parseInt(btn.getAttribute('data-amount'));
+                if (val === amount) btn.classList.add('active');
+                else btn.classList.remove('active');
+            });
+        }
+        amountBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                selectedAmount = parseInt(btn.getAttribute('data-amount'));
+                updateActive(selectedAmount);
+            });
+        });
+        if (payBtn) payBtn.addEventListener('click', redirectToPayment);
+
+        // inisialisasi
+        if (isMaintenanceTime()) startMaintenanceMode();
+        else startNormalMode();
+        updateActive(10000);
+    })();
+
+    // floating background (ringan)
+    (function createLightBg() {
+        const container = document.getElementById('floatingBg');
+        if (!container) return;
+        const count = 28;
+        for (let i = 0; i < count; i++) {
+            const span = document.createElement('span');
+            const size = 12 + Math.random() * 32;
+            span.style.width = `${size}px`;
+            span.style.height = `${size}px`;
+            span.style.left = `${Math.random() * 100}%`;
+            span.style.top = `${Math.random() * 100}%`;
+            span.style.animationDuration = `${12 + Math.random() * 14}s`;
+            span.style.opacity = '0.2';
+            span.style.background = `rgba(14, 59, 94, 0.12)`;
+            container.appendChild(span);
+        }
+    })();
+</script>
+</body>
+</html>nt="1000">Rp 1.000</div>
                 <div class="amount-btn" data-amount="2000">Rp 2.000</div>
                 <div class="amount-btn" data-amount="3000">Rp 3.000</div>
                 <div class="amount-btn" data-amount="4000">Rp 4.000</div>
