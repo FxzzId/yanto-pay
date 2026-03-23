@@ -162,14 +162,18 @@
         </div>
 
         <div class="amount-grid" id="amountGrid">
+            <div class="amount-btn" data-amount="1000">Rp 1.000</div>
+            <div class="amount-btn" data-amount="2000">Rp 2.000</div>
+            <div class="amount-btn" data-amount="3000">Rp 3.000</div>
+            <div class="amount-btn" data-amount="4000">Rp 4.000</div>
+            <div class="amount-btn" data-amount="5000">Rp 5.000</div>
             <div class="amount-btn" data-amount="10000">Rp 10.000</div>
             <div class="amount-btn" data-amount="20000">Rp 20.000</div>
+            <div class="amount-btn" data-amount="25000">Rp 25.000</div>
             <div class="amount-btn" data-amount="50000">Rp 50.000</div>
+            <div class="amount-btn" data-amount="75000">Rp 75.000</div>
             <div class="amount-btn" data-amount="100000">Rp 100.000</div>
-            <div class="amount-btn" data-amount="250000">Rp 250.000</div>
-            <div class="amount-btn" data-amount="500000">Rp 500.000</div>
         </div>
-        <input type="text" id="customAmount" class="custom-input" placeholder="atau nominal lain (min 10.000)">
 
         <button id="generateBtn" class="pay-btn">💸 GENERATE QRIS</button>
 
@@ -177,7 +181,7 @@
             <img id="qrImage" class="qr-image" src="" alt="QRIS">
             <div class="status-text" id="qrStatus"></div>
         </div>
-        <div id="loading" class="loading" style="display: none;">⏳ Memuat QRIS...</div>
+        <div id="loading" class="loading" style="display: none;">⏳ Mengambil QRIS...</div>
     </div>
     <div class="footer">© 2025 YANTO PAY • QRIS langsung dari hotelmurah.com</div>
 </div>
@@ -186,9 +190,8 @@
     const DANA_NUMBER = "089676041776";
     const API_URL = "/api/qris";
 
-    let selectedAmount = 50000;
+    let selectedAmount = 10000;
     const amountBtns = document.querySelectorAll('.amount-btn');
-    const customInput = document.getElementById('customAmount');
     const generateBtn = document.getElementById('generateBtn');
     const qrContainer = document.getElementById('qrContainer');
     const qrImage = document.getElementById('qrImage');
@@ -207,18 +210,9 @@
         });
     }
 
-    function getSelectedAmount() {
-        let raw = customInput.value.trim();
-        if (raw !== "") {
-            let val = parseInt(raw.replace(/\D/g, ''));
-            if (!isNaN(val) && val >= 10000) return val;
-        }
-        return selectedAmount;
-    }
-
     async function generateQRIS(amount) {
-        if (amount < 10000) {
-            alert("Minimal nominal Rp 10.000");
+        if (!amount || amount < 1000) {
+            alert("Pilih nominal terlebih dahulu");
             return false;
         }
 
@@ -226,12 +220,13 @@
         qrContainer.style.display = 'none';
 
         try {
+            // Panggil backend untuk ambil QRIS dari hotelmurah
             const response = await fetch(`${API_URL}?amount=${amount}&phone=${DANA_NUMBER}`);
             const data = await response.json();
 
             if (data.success && data.qrUrl) {
                 qrImage.src = data.qrUrl;
-                qrStatus.innerHTML = `✅ Scan QRIS dengan DANA / GoPay / OVO. Bayar Rp ${formatRupiah(amount)} ke DANA ${DANA_NUMBER}. Uang langsung masuk.`;
+                qrStatus.innerHTML = `✅ Scan QRIS dengan DANA / GoPay / OVO. Bayar Rp ${formatRupiah(amount)} ke DANA ${DANA_NUMBER}. Biaya admin sudah termasuk.`;
                 qrContainer.style.display = 'block';
             } else {
                 throw new Error('Gagal mendapatkan QRIS');
@@ -247,29 +242,16 @@
     amountBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             selectedAmount = parseInt(btn.getAttribute('data-amount'));
-            customInput.value = '';
             updateActiveButton(selectedAmount);
         });
     });
 
-    customInput.addEventListener('input', () => {
-        let raw = customInput.value.replace(/\D/g, '');
-        if (raw) {
-            let num = parseInt(raw);
-            if (!isNaN(num)) {
-                selectedAmount = num;
-                updateActiveButton(null);
-            }
-        }
-    });
-
     generateBtn.addEventListener('click', () => {
-        let amount = getSelectedAmount();
-        generateQRIS(amount);
+        generateQRIS(selectedAmount);
     });
 
-    updateActiveButton(50000);
-    selectedAmount = 50000;
+    updateActiveButton(10000);
+    selectedAmount = 10000;
 </script>
 </body>
-  </html>
+</html>
