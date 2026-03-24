@@ -3,156 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>YANTO PAY - QRIS Generator Otomatis</title>
+    <title>YANTO PAY - QRIS Generator</title>
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
         body{background:linear-gradient(145deg,#0a1f2c 0%,#05161f 100%);font-family:'Inter',system-ui,sans-serif;min-height:100vh;padding:24px;display:flex;align-items:center;justify-content:center;position:relative}
         
-        /* HAMBURGER MENU BUTTON - 3 GARIS DI KIRI ATAS */
-        .hamburger {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 1001;
-            background: #0e3b5e;
-            border: none;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 6px;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-            transition: all 0.2s;
-        }
-        .hamburger:hover {
-            background: #1a5a7e;
-            transform: scale(1.02);
-        }
-        .hamburger span {
-            width: 26px;
-            height: 3px;
-            background: #fff;
-            border-radius: 3px;
-            transition: all 0.3s;
-        }
+        /* HAMBURGER MENU */
+        .hamburger{position:fixed;top:20px;left:20px;z-index:1001;background:#0e3b5e;border:none;width:48px;height:48px;border-radius:50%;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:5px;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.25)}
+        .hamburger span{width:24px;height:2.5px;background:#fff;border-radius:2px}
         
-        /* SIDEBAR MENU */
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: -280px;
-            width: 280px;
-            height: 100%;
-            background: linear-gradient(180deg, #0e3b5e 0%, #0a2c44 100%);
-            z-index: 1000;
-            transition: left 0.3s ease;
-            box-shadow: 2px 0 20px rgba(0,0,0,0.3);
-        }
-        .sidebar.open {
-            left: 0;
-        }
-        .sidebar-header {
-            padding: 30px 24px;
-            border-bottom: 1px solid rgba(255,255,255,0.2);
-            margin-bottom: 20px;
-        }
-        .sidebar-header h2 {
-            color: #fff;
-            font-size: 1.6rem;
-        }
-        .sidebar-header p {
-            color: rgba(255,255,255,0.7);
-            font-size: 0.75rem;
-            margin-top: 6px;
-        }
-        .menu-items {
-            list-style: none;
-            padding: 0 16px;
-        }
-        .menu-items li {
-            margin-bottom: 8px;
-        }
-        .menu-items a {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 14px 20px;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 16px;
-            font-weight: 500;
-            transition: all 0.2s;
-        }
-        .menu-items a:hover {
-            background: rgba(255,255,255,0.15);
-        }
-        .menu-items a.active {
-            background: rgba(255,255,255,0.25);
-            border-left: 3px solid #ffd966;
-        }
-        .menu-items a span:first-child {
-            font-size: 1.3rem;
-        }
+        /* SIDEBAR */
+        .sidebar{position:fixed;top:0;left:-280px;width:280px;height:100%;background:linear-gradient(180deg,#0e3b5e 0%,#0a2c44 100%);z-index:1000;transition:left 0.3s ease;box-shadow:2px 0 20px rgba(0,0,0,0.3)}
+        .sidebar.open{left:0}
+        .sidebar-header{padding:30px 24px;border-bottom:1px solid rgba(255,255,255,0.2);margin-bottom:20px}
+        .sidebar-header h2{color:#fff;font-size:1.5rem}
+        .sidebar-header p{color:rgba(255,255,255,0.7);font-size:0.7rem;margin-top:5px}
+        .menu-items{list-style:none;padding:0 16px}
+        .menu-items li{margin-bottom:8px}
+        .menu-items a{display:flex;align-items:center;gap:14px;padding:12px 18px;color:#fff;text-decoration:none;border-radius:14px;font-weight:500}
+        .menu-items a:hover{background:rgba(255,255,255,0.15)}
+        .menu-items a.active{background:rgba(255,255,255,0.25);border-left:3px solid #ffd966}
+        .menu-items a span:first-child{font-size:1.2rem}
         
-        /* OVERLAY (gelap di belakang sidebar) */
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 999;
-            display: none;
-        }
-        .overlay.show {
-            display: block;
-        }
+        /* OVERLAY */
+        .overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:999;display:none}
+        .overlay.show{display:block}
         
-        /* MAIN CONTAINER - TIDAK BERUBAH */
-        .container{max-width:650px;width:100%;background:#fff;border-radius:48px;box-shadow:0 30px 60px rgba(0,0,0,0.3);overflow:hidden}
-        .header{background:linear-gradient(115deg,#0e3b5e,#0b2c44);padding:32px 28px;text-align:center}
-        .header h1{color:#fff;font-size:2rem;font-weight:800}
-        .header p{color:rgba(255,255,255,0.85);font-size:.9rem}
-        .content{padding:28px 24px}
-        .info-card{background:#f0f6fe;border-radius:28px;padding:14px 20px;margin-bottom:28px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;border:1px solid #cbd5e1}
-        .info-card span:first-child{font-weight:600;color:#0e3b5e}
-        .dana-number{font-size:1.2rem;font-weight:800;color:#0e3b5e;background:#fff;padding:6px 16px;border-radius:60px;font-family:monospace;border:1px solid #0e3b5e}
-        .amount-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
-        .amount-btn{background:#f2f5f9;border:1.5px solid #e2e8f0;padding:14px 6px;border-radius:48px;font-weight:700;cursor:pointer;text-align:center;transition:all 0.2s}
+        /* MAIN CONTAINER */
+        .container{max-width:600px;width:100%;background:#fff;border-radius:40px;box-shadow:0 25px 50px rgba(0,0,0,0.25);overflow:hidden}
+        .header{background:linear-gradient(115deg,#0e3b5e,#0b2c44);padding:28px 24px;text-align:center}
+        .header h1{color:#fff;font-size:1.8rem;font-weight:800}
+        .header p{color:rgba(255,255,255,0.85);font-size:0.85rem;margin-top:5px}
+        .content{padding:24px 20px}
+        .info-card{background:#f0f6fe;border-radius:24px;padding:12px 18px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+        .info-card span:first-child{font-weight:600;color:#0e3b5e;font-size:0.9rem}
+        .dana-number{font-size:1.1rem;font-weight:800;color:#0e3b5e;background:#fff;padding:5px 14px;border-radius:40px;font-family:monospace}
+        .info-note{background:#fef9e3;border-radius:16px;padding:10px 14px;margin-bottom:20px;font-size:0.75rem;color:#92400e;text-align:center}
+        .amount-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+        .amount-btn{background:#f2f5f9;border:1px solid #e2e8f0;padding:12px 5px;border-radius:40px;font-weight:700;cursor:pointer;text-align:center;font-size:0.85rem;transition:all 0.2s}
         .amount-btn.active{background:#0e3b5e;border-color:#0e3b5e;color:#fff}
-        .amount-btn:hover{background:#e2e8f0}
-        .pay-btn{width:100%;background:linear-gradient(105deg,#0e3b5e,#0a2c44);border:none;padding:16px;border-radius:60px;color:#fff;font-weight:800;cursor:pointer;margin:20px 0;font-size:1rem}
-        .pay-btn:disabled{opacity:0.5;cursor:not-allowed}
-        .result-card{background:#f8fafc;border-radius:32px;margin-top:24px;overflow:hidden;border:1px solid #e2e8f0}
-        .result-header{background:#0e3b5e;padding:16px 20px;color:#fff;font-weight:700;display:flex;justify-content:space-between;align-items:center}
-        .screenshot-area{background:#fff;padding:20px;text-align:center;background:#f1f5f9}
-        .screenshot-img{max-width:100%;border-radius:16px;box-shadow:0 4px 12px rgba(0,0,0,0.1);border:1px solid #e2e8f0}
-        .trx-detail{background:#fff;padding:16px 20px;border-top:1px solid #eef2f8}
-        .trx-row{display:flex;justify-content:space-between;margin-bottom:12px;padding:8px 0;border-bottom:1px dashed #eef2f8}
+        .pay-btn{width:100%;background:linear-gradient(105deg,#0e3b5e,#0a2c44);border:none;padding:14px;border-radius:50px;color:#fff;font-weight:800;cursor:pointer;margin:16px 0;font-size:1rem}
+        .pay-btn:disabled{opacity:0.5}
+        .result-card{background:#f8fafc;border-radius:28px;margin-top:20px;overflow:hidden}
+        .result-header{background:#0e3b5e;padding:12px 18px;color:#fff;font-weight:700;display:flex;justify-content:space-between;align-items:center}
+        .screenshot-area{background:#fff;padding:16px;text-align:center}
+        .screenshot-img{max-width:100%;border-radius:12px;max-height:280px}
+        .trx-detail{background:#fff;padding:14px 18px;border-top:1px solid #eef2f8}
+        .trx-row{display:flex;justify-content:space-between;margin-bottom:10px;padding:6px 0;border-bottom:1px dashed #eef2f8}
         .trx-row:last-child{border-bottom:none}
-        .trx-label{color:#4b6f8e;font-weight:500}
-        .trx-value{font-weight:700;color:#0e3b5e;font-size:1.1rem}
-        .loading{background:#f8fafc;border-radius:32px;padding:40px;text-align:center;margin-top:20px}
-        .spinner{width:40px;height:40px;border:4px solid #e2e8f0;border-top-color:#0e3b5e;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 16px}
+        .trx-label{color:#4b6f8e;font-size:0.85rem}
+        .trx-value{font-weight:700;color:#0e3b5e;font-size:0.95rem}
+        .loading{background:#f8fafc;border-radius:28px;padding:30px;text-align:center;margin-top:16px}
+        .spinner{width:35px;height:35px;border:3px solid #e2e8f0;border-top-color:#0e3b5e;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 12px}
         @keyframes spin{to{transform:rotate(360deg)}}
-        .error-message{background:#fee2e2;border-radius:24px;padding:16px;color:#991b1b;margin-top:16px}
-        .footer{background:#f9fbfd;padding:18px;text-align:center;font-size:.7rem;color:#7f9cbb;border-top:1px solid #eef2f8}
-        .download-btn{background:#0e3b5e;color:#fff;border:none;padding:8px 16px;border-radius:40px;cursor:pointer;font-size:0.8rem}
-        .info-note{background:#fef9e3;border-radius:16px;padding:12px;margin-bottom:20px;font-size:0.8rem;color:#92400e;text-align:center}
-        @media (max-width:500px){.amount-grid{grid-template-columns:repeat(3,1fr)}}
+        .error-message{background:#fee2e2;border-radius:20px;padding:12px;color:#991b1b;margin-top:16px;font-size:0.85rem;text-align:center}
+        .download-btn{background:#fff;color:#0e3b5e;border:none;padding:6px 14px;border-radius:30px;cursor:pointer;font-size:0.75rem;font-weight:600}
+        .footer{background:#f9fbfd;padding:12px;text-align:center;font-size:0.65rem;color:#7f9cbb;border-top:1px solid #eef2f8}
+        @media (max-width:500px){.amount-grid{grid-template-columns:repeat(3,1fr)} .container{margin-top:20px}}
     </style>
 </head>
 <body>
-    <!-- HAMBURGER BUTTON (3 GARIS) -->
+    <!-- HAMBURGER BUTTON -->
     <button class="hamburger" id="hamburgerBtn">
-        <span></span>
-        <span></span>
-        <span></span>
+        <span></span><span></span><span></span>
     </button>
     
     <!-- OVERLAY -->
@@ -165,28 +78,13 @@
             <p>QRIS Generator Otomatis</p>
         </div>
         <ul class="menu-items">
-            <li>
-                <a href="index.html" class="active" id="menuHome">
-                    <span>🏠</span>
-                    <span>HOME</span>
-                </a>
-            </li>
-            <li>
-                <a href="index.html" id="menuDana">
-                    <span>💰</span>
-                    <span>TOP UP DANA</span>
-                </a>
-            </li>
-            <li>
-                <a href="games.html" id="menuGames">
-                    <span>🎮</span>
-                    <span>TOP UP GAMES</span>
-                </a>
-            </li>
+            <li><a href="index.html" class="active"><span>🏠</span><span>HOME</span></a></li>
+            <li><a href="index.html"><span>💰</span><span>TOP UP DANA</span></a></li>
+            <li><a href="games.html"><span>🎮</span><span>TOP UP GAMES</span></a></li>
         </ul>
     </div>
 
-    <!-- MAIN CONTAINER (TIDAK BERUBAH) -->
+    <!-- MAIN CONTENT -->
     <div class="container">
         <div class="header">
             <h1>YANTO PAY</h1>
@@ -199,7 +97,7 @@
             </div>
             
             <div class="info-note">
-                🤖 Robot akan otomatis mengisi nomor, memilih nominal, dan mengambil screenshot QRIS + info biaya admin
+                🤖 Robot akan otomatis mengisi nomor, memilih nominal, dan mengambil screenshot QRIS
             </div>
             
             <div class="amount-grid" id="amountGrid">
@@ -216,18 +114,134 @@
                 <div class="amount-btn" data-amount="100000">Rp 100.000</div>
             </div>
             
-            <button id="generateBtn" class="pay-btn">🤖 GENERATE QRIS OTOMATIS</button>
+            <button id="generateBtn" class="pay-btn">🤖 GENERATE QRIS</button>
             
             <div id="loading" class="loading" style="display:none">
                 <div class="spinner"></div>
                 <div>🤖 Robot sedang bekerja...</div>
-                <div style="font-size:12px; margin-top:8px">Mengisi nomor DANA → Memilih nominal → Mengambil screenshot QRIS</div>
-                <div style="font-size:11px; color:#7f9cbb; margin-top:12px">Proses memakan waktu 10-20 detik</div>
+                <div style="font-size:11px; margin-top:5px">Mengisi nomor → Pilih nominal → Screenshot QRIS</div>
             </div>
             
             <div id="resultContainer" style="display:none">
                 <div class="result-card">
                     <div class="result-header">
+                        <span>📸 QRIS READY</span>
+                        <button id="downloadBtn" class="download-btn">💾 Download</button>
+                    </div>
+                    <div class="screenshot-area">
+                        <img id="screenshotImg" class="screenshot-img" src="" alt="QRIS">
+                    </div>
+                    <div id="trxDetail" class="trx-detail"></div>
+                </div>
+            </div>
+            
+            <div id="errorMessage" class="error-message" style="display:none"></div>
+        </div>
+        <div class="footer">
+            © 2025 YANTO PAY • QRIS Generator Otomatis
+        </div>
+    </div>
+
+    <script>
+        // MENU HAMBURGER
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        function openMenu() { sidebar.classList.add('open'); overlay.classList.add('show'); document.body.style.overflow = 'hidden'; }
+        function closeMenu() { sidebar.classList.remove('open'); overlay.classList.remove('show'); document.body.style.overflow = ''; }
+        hamburgerBtn.addEventListener('click', openMenu);
+        overlay.addEventListener('click', closeMenu);
+        document.querySelectorAll('.menu-items a').forEach(link => link.addEventListener('click', closeMenu));
+
+        // QRIS GENERATOR
+        const DANA_NUMBER = "089676041776";
+        const API_URL = "/api/qris";
+        let selectedAmount = 10000;
+        let isProcessing = false;
+        let currentScreenshot = null;
+        
+        const amountBtns = document.querySelectorAll('.amount-btn');
+        const generateBtn = document.getElementById('generateBtn');
+        const loadingDiv = document.getElementById('loading');
+        const resultContainer = document.getElementById('resultContainer');
+        const screenshotImg = document.getElementById('screenshotImg');
+        const trxDetail = document.getElementById('trxDetail');
+        const errorMessage = document.getElementById('errorMessage');
+        const downloadBtn = document.getElementById('downloadBtn');
+
+        function formatRupiah(angka){ return new Intl.NumberFormat('id-ID').format(angka); }
+        
+        function updateActiveButton(amount){
+            amountBtns.forEach(btn=>{
+                let btnAmt=parseInt(btn.dataset.amount);
+                btnAmt===amount?btn.classList.add('active'):btn.classList.remove('active');
+            });
+        }
+        
+        async function generateQRIS(amount){
+            if(isProcessing) { alert('Robot sedang bekerja, harap tunggu...'); return; }
+            if(!amount || amount < 1000){ alert("Pilih nominal terlebih dahulu"); return; }
+            
+            isProcessing = true;
+            generateBtn.disabled = true;
+            loadingDiv.style.display = 'block';
+            resultContainer.style.display = 'none';
+            errorMessage.style.display = 'none';
+            
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 45000);
+                const resp = await fetch(`${API_URL}?amount=${amount}`, { signal: controller.signal });
+                clearTimeout(timeoutId);
+                const data = await resp.json();
+                
+                if(data.success && data.screenshot) {
+                    currentScreenshot = data.screenshot;
+                    screenshotImg.src = `data:image/png;base64,${data.screenshot}`;
+                    trxDetail.innerHTML = `
+                        <div class="trx-row"><span class="trx-label">🆔 ID Transaksi</span><span class="trx-value">${data.trxId}</span></div>
+                        <div class="trx-row"><span class="trx-label">💰 Nominal</span><span class="trx-value">Rp ${formatRupiah(data.nominal)}</span></div>
+                        <div class="trx-row"><span class="trx-label">📊 Biaya Admin</span><span class="trx-value">Rp ${formatRupiah(data.fee)}</span></div>
+                        <div class="trx-row"><span class="trx-label">💵 Total Bayar</span><span class="trx-value">Rp ${formatRupiah(data.total)}</span></div>
+                        <div class="trx-row"><span class="trx-label">📱 DANA Tujuan</span><span class="trx-value">${data.phone}</span></div>
+                    `;
+                    resultContainer.style.display = 'block';
+                    resultContainer.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    throw new Error(data.error || 'Gagal generate QRIS');
+                }
+            } catch(e) {
+                let errorMsg = e.name === 'AbortError' ? 'Proses terlalu lama, coba lagi nanti.' : e.message;
+                errorMessage.innerHTML = `⚠️ ${errorMsg}`;
+                errorMessage.style.display = 'block';
+            } finally {
+                isProcessing = false;
+                generateBtn.disabled = false;
+                loadingDiv.style.display = 'none';
+            }
+        }
+        
+        downloadBtn.addEventListener('click', () => {
+            if(currentScreenshot) {
+                const link = document.createElement('a');
+                link.download = `QRIS_${selectedAmount}_${Date.now()}.png`;
+                link.href = `data:image/png;base64,${currentScreenshot}`;
+                link.click();
+            }
+        });
+        
+        amountBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                selectedAmount = parseInt(btn.dataset.amount);
+                updateActiveButton(selectedAmount);
+            });
+        });
+        
+        generateBtn.addEventListener('click', () => { generateQRIS(selectedAmount); });
+        updateActiveButton(10000);
+    </script>
+</body>
+</html>-header">
                         <span>📸 QRIS READY</span>
                         <button id="downloadBtn" class="download-btn">💾 Download</button>
                     </div>
