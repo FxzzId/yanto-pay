@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>YANTO PAY - Top Up Game Itemku</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{background:linear-gradient(145deg,#0a1f2c 0%,#05161f 100%);font-family:'Inter',system-ui,sans-serif;min-height:100vh;padding:24px}
+        .navbar{background:#0e3b5e;padding:16px 24px;border-radius:60px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+        .navbar a{color:#fff;text-decoration:none;font-weight:600;padding:8px 20px;border-radius:40px;background:rgba(255,255,255,0.1)}
+        .navbar a:hover{background:rgba(255,255,255,0.2)}
+        .navbar .logo{font-size:1.5rem;font-weight:800}
+        .container{max-width:1200px;width:100%;margin:0 auto}
+        .header{text-align:center;margin-bottom:32px;color:#fff}
+        .header h1{font-size:2rem;margin-bottom:8px}
+        .header p{opacity:0.8}
+        .search-box{background:#fff;border-radius:60px;padding:12px 20px;margin-bottom:32px;display:flex;gap:12px}
+        .search-box input{flex:1;border:none;outline:none;font-size:1rem;padding:8px}
+        .search-box button{background:#0e3b5e;color:#fff;border:none;padding:8px 24px;border-radius:40px;cursor:pointer}
+        .games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px;margin-bottom:32px}
+        .game-card{background:#fff;border-radius:24px;padding:16px;text-align:center;cursor:pointer;transition:transform 0.2s}
+        .game-card:hover{transform:translateY(-4px);box-shadow:0 8px 20px rgba(0,0,0,0.15)}
+        .game-card img{width:80px;height:80px;object-fit:contain;margin-bottom:12px}
+        .game-card h3{font-size:0.9rem;color:#0e3b5e}
+        .items-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-top:24px}
+        .item-card{background:#fff;border-radius:24px;padding:16px;cursor:pointer;transition:all 0.2s;border:2px solid transparent}
+        .item-card:hover{border-color:#0e3b5e;transform:translateY(-2px)}
+        .item-card img{width:50px;height:50px;object-fit:contain;margin-bottom:8px}
+        .item-card h4{font-size:0.9rem;margin-bottom:8px;color:#1e293b}
+        .item-card .price{color:#0e3b5e;font-weight:800;font-size:1.2rem}
+        .item-card .old-price{text-decoration:line-through;color:#94a3b8;font-size:0.8rem}
+        .modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);align-items:center;justify-content:center;z-index:1000}
+        .modal-content{background:#fff;border-radius:32px;max-width:500px;width:90%;padding:24px;max-height:80vh;overflow-y:auto}
+        .modal-content h3{margin-bottom:16px}
+        .modal-content input{width:100%;padding:12px;border:1px solid #e2e8f0;border-radius:40px;margin-bottom:16px;font-size:1rem}
+        .modal-content button{width:100%;padding:14px;background:#0e3b5e;color:#fff;border:none;border-radius:40px;font-weight:700;cursor:pointer}
+        .loading{text-align:center;padding:40px;color:#fff}
+        .spinner{width:40px;height:40px;border:4px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 16px}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .qr-result{text-align:center}
+        .qr-result img{max-width:100%;border-radius:16px;margin:16px 0}
+        .back-btn{background:#e2e8f0;color:#0e3b5e;margin-top:12px}
+        .section-title{color:#fff;margin:24px 0 16px;font-size:1.2rem}
+        .selected-game{background:#fff;border-radius:24px;padding:16px;margin-bottom:20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+        .selected-game img{width:50px;height:50px}
+        .clear-btn{background:#ef4444;color:#fff;border:none;padding:8px 16px;border-radius:40px;cursor:pointer}
+        @media (max-width:600px){.games-grid{grid-template-columns:repeat(3,1fr)}}
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="navbar">
+        <span class="logo">🎮 YANTO PAY</span>
+        <div>
+            <a href="index.html">💰 DANA</a>
+            <a href="games.html" style="background:rgba(255,255,255,0.2)">🎮 GAMES</a>
+        </div>
+    </div>
+    
+    <div class="header">
+        <h1>Top Up Game</h1>
+        <p>Pilih game favoritmu, bayar pakai QRIS</p>
+    </div>
+    
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Cari game... (Mobile Legends, Free Fire, dll)">
+        <button id="searchBtn">Cari</button>
+    </div>
+    
+    <div id="gamesContainer">
+        <div class="loading"><div class="spinner"></div>Memuat daftar game...</div>
+    </div>
+    
+    <div id="selectedGameSection" style="display:none">
+        <div class="selected-game" id="selectedGameInfo"></div>
+        <div id="itemsContainer"></div>
+    </div>
+</div>
+
+<!-- Modal untuk input User ID -->
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <h3 id="modalTitle">Masukkan User ID / Nomor HP</h3>
+        <input type="text" id="userIdInput" placeholder="Masukkan User ID atau Nomor HP">
+        <button id="confirmBtn">Buat QRIS</button>
+        <button id="closeModalBtn" class="back-btn" style="margin-top:12px">Batal</button>
+        <div id="modalLoading" style="display:none; text-align:center; margin-top:16px">
+            <div class="spinner"></div>
+            <p>Memproses...</p>
+        </div>
+    </div>
+</div>
+
+<!-- Modal untuk hasil QRIS -->
+<div id="qrModal" class="modal">
+    <div class="modal-content qr-result">
+        <h3>✅ QRIS Siap Discan</h3>
+        <img id="qrResultImg" src="" alt="QRIS">
+        <div id="qrResultInfo"></div>
+        <button id="downloadQrBtn" style="background:#10b981; margin-bottom:8px">💾 Download QRIS</button>
+        <button id="closeQrModalBtn" class="back-btn">Tutup</button>
+    </div>
+</div>
+
+<script>
+    const API_URL = "/api/itemku";
+    let selectedGame = null;
+    let selectedItem = null;
+    let currentScreenshot = null;
+    
+    async function loadGames(search = '') {
+        const gamesContainer = document.getElementById('gamesContainer');
+        gamesContainer.innerHTML = '<div class="loading"><div class="spinner"></div>Memuat daftar game...</div>';
+        
+        try {
+            let url = `${API_URL}?action=getGames`;
+            if (search) {
+                url = `https://www.itemku.com/topup-game?q=${encodeURIComponent(search)}`;
+                // Fallback ke scraping langsung
+                const resp = await fetch(`/api/itemku?action=getGames&search=${encodeURIComponent(search)}`);
+                const data = await resp.json();
+                displayGames(data.games || []);
+                return;
+            }
+            
+            const resp = await fetch(url);
+            const data = await resp.json();
+            displayGames(data.games || []);
+        } catch (error) {
+            gamesContainer.innerHTML = `<div class="loading">Gagal memuat game. <button onclick="loadGames()">Coba Lagi</button></div>`;
+        }
+    }
+    
+    function displayGames(games) {
+        const gamesContainer = document.getElementById('gamesContainer');
+        
+        if (!games || games.length === 0) {
+            gamesContainer.innerHTML = '<div class="loading">Tidak ada game ditemukan</div>';
+            return;
+        }
+        
+        gamesContainer.innerHTML = `
+            <div class="section-title">🎮 Populer Games</div>
+            <div class="games-grid">
+                ${games.map(game => `
+                    <div class="game-card" onclick="selectGame('${game.name.replace(/'/g, "\\'")}', '${game.image || ''}')">
+                        ${game.image ? `<img src="${game.image}" alt="${game.name}" onerror="this.src='https://via.placeholder.com/80'">` : '<div style="width:80px;height:80px;background:#e2e8f0;border-radius:50%;margin:0 auto 12px;display:flex;align-items:center;justify-content:center">🎮</div>'}
+                        <h3>${game.name}</h3>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+    
+    async function selectGame(gameName, gameImage) {
+        selectedGame = { name: gameName, image: gameImage };
+        
+        const selectedSection = document.getElementById('selectedGameSection');
+        const selectedInfo = document.getElementById('selectedGameInfo');
+        const itemsContainer = document.getElementById('itemsContainer');
+        
+        selectedInfo.innerHTML = `
+            ${gameImage ? `<img src="${gameImage}" onerror="this.style.display='none'">` : '<span style="font-size:2rem">🎮</span>'}
+            <span style="flex:1"><strong>${gameName}</strong></span>
+            <button class="clear-btn" onclick="clearSelectedGame()">Ganti Game</button>
+        `;
+        
+        selectedSection.style.display = 'block';
+        itemsContainer.innerHTML = '<div class="loading"><div class="spinner"></div>Memuat item...</div>';
+        
+        try {
+            const resp = await fetch(`${API_URL}?action=getItems&game=${encodeURIComponent(gameName)}`);
+            const data = await resp.json();
+            
+            if (data.success && data.items && data.items.length > 0) {
+                itemsContainer.innerHTML = `
+                    <div class="section-title">📦 Pilih Item</div>
+                    <div class="items-grid">
+                        ${data.items.map(item => `
+                            <div class="item-card" onclick="selectItem('${item.name.replace(/'/g, "\\'")}', '${item.price}', '${item.image || ''}', '${item.url || ''}')">
+                                ${item.image ? `<img src="${item.image}" onerror="this.style.display='none'">` : '<span style="font-size:2rem">📦</span>'}
+                                <h4>${item.name.substring(0, 40)}</h4>
+                                <div class="price">${item.priceText}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            } else {
+                itemsContainer.innerHTML = '<div class="loading">Tidak ada item ditemukan untuk game ini</div>';
+            }
+        } catch (error) {
+            itemsContainer.innerHTML = '<div class="loading">Gagal memuat item. Coba lagi nanti.</div>';
+        }
+    }
+    
+    function clearSelectedGame() {
+        selectedGame = null;
+        document.getElementById('selectedGameSection').style.display = 'none';
+        document.getElementById('gamesContainer').scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    function selectItem(itemName, price, image, url) {
+        selectedItem = { name: itemName, price: price, url: url };
+        
+        const modal = document.getElementById('modal');
+        const modalTitle = document.getElementById('modalTitle');
+        modalTitle.innerHTML = `🎮 ${selectedGame.name}<br><span style="font-size:14px">${itemName}</span><br>💰 ${new Intl.NumberFormat('id-ID').format(price)}`;
+        modal.style.display = 'flex';
+    }
+    
+    document.getElementById('confirmBtn').onclick = async () => {
+        const userId = document.getElementById('userIdInput').value.trim();
+        if (!userId) {
+            alert('Masukkan User ID atau Nomor HP');
+            return;
+        }
+        
+        const modal = document.getElementById('modal');
+        const modalLoading = document.getElementById('modalLoading');
+        const confirmBtn = document.getElementById('confirmBtn');
+        
+        modalLoading.style.display = 'block';
+        confirmBtn.disabled = true;
+        
+        try {
+            // Extract item ID dari URL
+            let itemId = '';
+            if (selectedItem.url) {
+                const match = selectedItem.url.match(/\/item\/(\d+)/);
+                if (match) itemId = match[1];
+            }
+            
+            const resp = await fetch(`${API_URL}?action=generateQRIS&itemId=${itemId}&phone=${encodeURIComponent(userId)}`);
+            const data = await resp.json();
+            
+            if (data.success && data.screenshot) {
+                currentScreenshot = data.screenshot;
+                
+                const qrModal = document.getElementById('qrModal');
+                const qrImg = document.getElementById('qrResultImg');
+                const qrInfo = document.getElementById('qrResultInfo');
+                
+                qrImg.src = `data:image/png;base64,${data.screenshot}`;
+                qrInfo.innerHTML = `
+                    <div style="margin:12px 0; text-align:left">
+                        <p><strong>🎮 Game:</strong> ${selectedGame.name}</p>
+                        <p><strong>📦 Item:</strong> ${selectedItem.name}</p>
+                        <p><strong>🆔 User ID:</strong> ${userId}</p>
+                        <p><strong>🆔 Trx ID:</strong> ${data.trxId}</p>
+                        <p><strong>⏰ Waktu:</strong> ${new Date(data.timestamp).toLocaleString('id-ID')}</p>
+                    </div>
+                `;
+                
+                modal.style.display = 'none';
+                qrModal.style.display = 'flex';
+                
+                // Reset form
+                document.getElementById('userIdInput').value = '';
+            } else {
+                alert('Gagal generate QRIS: ' + (data.error || 'Unknown error'));
+            }
+        } catch (error) {
+            alert('Error: ' + error.message);
+        } finally {
+            modalLoading.style.display = 'none';
+            confirmBtn.disabled = false;
+        }
+    };
+    
+    // Download QRIS
+    document.getElementById('downloadQrBtn').onclick = () => {
+        if (currentScreenshot) {
+            const link = document.createElement('a');
+            link.download = `QRIS_${selectedGame?.name || 'game'}_${Date.now()}.png`;
+            link.href = `data:image/png;base64,${currentScreenshot}`;
+            link.click();
+        }
+    };
+    
+    // Close modals
+    document.getElementById('closeModalBtn').onclick = () => {
+        document.getElementById('modal').style.display = 'none';
+        document.getElementById('userIdInput').value = '';
+    };
+    
+    document.getElementById('closeQrModalBtn').onclick = () => {
+        document.getElementById('qrModal').style.display = 'none';
+    };
+    
+    // Search functionality
+    document.getElementById('searchBtn').onclick = () => {
+        const search = document.getElementById('searchInput').value;
+        loadGames(search);
+    };
+    
+    document.getElementById('searchInput').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') loadGames(e.target.value);
+    });
+    
+    // Load games on page load
+    loadGames();
+</script>
+</body>
+      </html>
