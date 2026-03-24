@@ -6,182 +6,223 @@
     <title>YANTO PAY - Top Up Game Itemku</title>
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
-        body{background:linear-gradient(145deg,#0a1f2c 0%,#05161f 100%);font-family:'Inter',system-ui,sans-serif;min-height:100vh;padding:24px}
-        .navbar{background:#0e3b5e;padding:16px 24px;border-radius:60px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
-        .navbar a{color:#fff;text-decoration:none;font-weight:600;padding:8px 20px;border-radius:40px;background:rgba(255,255,255,0.1)}
-        .navbar a:hover{background:rgba(255,255,255,0.2)}
-        .navbar .logo{font-size:1.5rem;font-weight:800}
-        .container{max-width:1200px;width:100%;margin:0 auto}
-        .header{text-align:center;margin-bottom:32px;color:#fff}
-        .header h1{font-size:2rem;margin-bottom:8px}
-        .header p{opacity:0.8}
-        .search-box{background:#fff;border-radius:60px;padding:12px 20px;margin-bottom:32px;display:flex;gap:12px}
-        .search-box input{flex:1;border:none;outline:none;font-size:1rem;padding:8px}
+        body{background:linear-gradient(145deg,#0a1f2c 0%,#05161f 100%);font-family:'Inter',system-ui,sans-serif;min-height:100vh;padding:24px;position:relative}
+        
+        /* HAMBURGER MENU BUTTON */
+        .hamburger{position:fixed;top:20px;left:20px;z-index:1001;background:#0e3b5e;border:none;width:50px;height:50px;border-radius:50%;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:6px;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.25)}
+        .hamburger:hover{background:#1a5a7e}
+        .hamburger span{width:26px;height:3px;background:#fff;border-radius:3px}
+        
+        /* SIDEBAR */
+        .sidebar{position:fixed;top:0;left:-280px;width:280px;height:100%;background:linear-gradient(180deg,#0e3b5e 0%,#0a2c44 100%);z-index:1000;transition:left 0.3s ease;box-shadow:2px 0 20px rgba(0,0,0,0.3)}
+        .sidebar.open{left:0}
+        .sidebar-header{padding:30px 24px;border-bottom:1px solid rgba(255,255,255,0.2);margin-bottom:20px}
+        .sidebar-header h2{color:#fff;font-size:1.6rem}
+        .sidebar-header p{color:rgba(255,255,255,0.7);font-size:0.75rem;margin-top:6px}
+        .menu-items{list-style:none;padding:0 16px}
+        .menu-items li{margin-bottom:8px}
+        .menu-items a{display:flex;align-items:center;gap:14px;padding:14px 20px;color:#fff;text-decoration:none;border-radius:16px;font-weight:500}
+        .menu-items a:hover{background:rgba(255,255,255,0.15)}
+        .menu-items a.active{background:rgba(255,255,255,0.25);border-left:3px solid #ffd966}
+        .menu-items a span:first-child{font-size:1.3rem}
+        
+        /* OVERLAY */
+        .overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:999;display:none}
+        .overlay.show{display:block}
+        
+        /* MAIN CONTENT GAMES */
+        .container{max-width:800px;width:100%;margin:0 auto;background:#fff;border-radius:48px;overflow:hidden;box-shadow:0 30px 60px rgba(0,0,0,0.3)}
+        .header{background:linear-gradient(115deg,#0e3b5e,#0b2c44);padding:32px 28px;text-align:center}
+        .header h1{color:#fff;font-size:2rem;font-weight:800}
+        .header p{color:rgba(255,255,255,0.85);font-size:.9rem}
+        .content{padding:28px 24px}
+        .search-box{background:#f2f5f9;border-radius:60px;padding:12px 20px;margin-bottom:24px;display:flex;gap:12px}
+        .search-box input{flex:1;border:none;background:transparent;outline:none;font-size:1rem}
         .search-box button{background:#0e3b5e;color:#fff;border:none;padding:8px 24px;border-radius:40px;cursor:pointer}
-        .games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px;margin-bottom:32px}
-        .game-card{background:#fff;border-radius:24px;padding:16px;text-align:center;cursor:pointer;transition:transform 0.2s}
-        .game-card:hover{transform:translateY(-4px);box-shadow:0 8px 20px rgba(0,0,0,0.15)}
-        .game-card img{width:80px;height:80px;object-fit:contain;margin-bottom:12px}
+        .games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px;margin-bottom:24px}
+        .game-card{background:#f8fafc;border-radius:24px;padding:16px;text-align:center;cursor:pointer;transition:all 0.2s;border:1px solid #e2e8f0}
+        .game-card:hover{transform:translateY(-4px);box-shadow:0 8px 20px rgba(0,0,0,0.1);border-color:#0e3b5e}
+        .game-card img{width:70px;height:70px;object-fit:contain;margin-bottom:12px}
         .game-card h3{font-size:0.9rem;color:#0e3b5e}
-        .items-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-top:24px}
-        .item-card{background:#fff;border-radius:24px;padding:16px;cursor:pointer;transition:all 0.2s;border:2px solid transparent}
-        .item-card:hover{border-color:#0e3b5e;transform:translateY(-2px)}
-        .item-card img{width:50px;height:50px;object-fit:contain;margin-bottom:8px}
-        .item-card h4{font-size:0.9rem;margin-bottom:8px;color:#1e293b}
+        .items-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-top:20px}
+        .item-card{background:#fff;border-radius:24px;padding:16px;cursor:pointer;border:2px solid #e2e8f0;transition:all 0.2s}
+        .item-card:hover{border-color:#0e3b5e}
+        .item-card h4{font-size:0.9rem;margin-bottom:8px}
         .item-card .price{color:#0e3b5e;font-weight:800;font-size:1.2rem}
-        .item-card .old-price{text-decoration:line-through;color:#94a3b8;font-size:0.8rem}
-        .modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);align-items:center;justify-content:center;z-index:1000}
-        .modal-content{background:#fff;border-radius:32px;max-width:500px;width:90%;padding:24px;max-height:80vh;overflow-y:auto}
-        .modal-content h3{margin-bottom:16px}
-        .modal-content input{width:100%;padding:12px;border:1px solid #e2e8f0;border-radius:40px;margin-bottom:16px;font-size:1rem}
-        .modal-content button{width:100%;padding:14px;background:#0e3b5e;color:#fff;border:none;border-radius:40px;font-weight:700;cursor:pointer}
-        .loading{text-align:center;padding:40px;color:#fff}
-        .spinner{width:40px;height:40px;border:4px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 16px}
+        .loading{text-align:center;padding:40px}
+        .spinner{width:40px;height:40px;border:4px solid #e2e8f0;border-top-color:#0e3b5e;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 16px}
         @keyframes spin{to{transform:rotate(360deg)}}
-        .qr-result{text-align:center}
+        .modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);align-items:center;justify-content:center;z-index:2000}
+        .modal-content{background:#fff;border-radius:32px;max-width:500px;width:90%;padding:24px}
+        .modal-content input{width:100%;padding:14px;border:1px solid #e2e8f0;border-radius:40px;margin:16px 0;font-size:1rem}
+        .modal-content button{width:100%;padding:14px;background:#0e3b5e;color:#fff;border:none;border-radius:40px;font-weight:700;cursor:pointer}
         .qr-result img{max-width:100%;border-radius:16px;margin:16px 0}
-        .back-btn{background:#e2e8f0;color:#0e3b5e;margin-top:12px}
-        .section-title{color:#fff;margin:24px 0 16px;font-size:1.2rem}
-        .selected-game{background:#fff;border-radius:24px;padding:16px;margin-bottom:20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
-        .selected-game img{width:50px;height:50px}
+        .selected-game{background:#f0f6fe;border-radius:24px;padding:16px;margin-bottom:20px;display:flex;align-items:center;gap:16px}
         .clear-btn{background:#ef4444;color:#fff;border:none;padding:8px 16px;border-radius:40px;cursor:pointer}
-        @media (max-width:600px){.games-grid{grid-template-columns:repeat(3,1fr)}}
+        .section-title{font-size:1.1rem;font-weight:700;color:#0e3b5e;margin:16px 0}
+        .footer{background:#f9fbfd;padding:18px;text-align:center;font-size:.7rem;color:#7f9cbb;border-top:1px solid #eef2f8}
     </style>
 </head>
 <body>
-<div class="container">
-    <div class="navbar">
-        <span class="logo">🎮 YANTO PAY</span>
-        <div>
-            <a href="index.html">💰 DANA</a>
-            <a href="games.html" style="background:rgba(255,255,255,0.2)">🎮 GAMES</a>
+    <!-- HAMBURGER BUTTON -->
+    <button class="hamburger" id="hamburgerBtn">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+    
+    <!-- OVERLAY -->
+    <div class="overlay" id="overlay"></div>
+    
+    <!-- SIDEBAR MENU -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>YANTO PAY</h2>
+            <p>QRIS Generator Otomatis</p>
+        </div>
+        <ul class="menu-items">
+            <li><a href="index.html"><span>🏠</span><span>HOME</span></a></li>
+            <li><a href="index.html"><span>💰</span><span>TOP UP DANA</span></a></li>
+            <li><a href="games.html" class="active"><span>🎮</span><span>TOP UP GAMES</span></a></li>
+        </ul>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="container" style="margin-top:20px">
+        <div class="header">
+            <h1>🎮 TOP UP GAME</h1>
+            <p>Pilih game favoritmu, bayar pakai QRIS</p>
+        </div>
+        <div class="content">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Cari game... (Mobile Legends, Free Fire, dll)">
+                <button id="searchBtn">Cari</button>
+            </div>
+            <div id="gamesContainer"><div class="loading"><div class="spinner"></div>Memuat daftar game...</div></div>
+            <div id="selectedGameSection" style="display:none">
+                <div class="selected-game" id="selectedGameInfo"></div>
+                <div id="itemsContainer"></div>
+            </div>
+        </div>
+        <div class="footer">© 2025 YANTO PAY • Top Up Game dari Itemku</div>
+    </div>
+
+    <!-- MODAL INPUT USER ID -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <h3 id="modalTitle">Masukkan User ID / Nomor HP</h3>
+            <input type="text" id="userIdInput" placeholder="Masukkan User ID atau Nomor HP">
+            <button id="confirmBtn">Buat QRIS</button>
+            <button id="closeModalBtn" style="background:#94a3b8; margin-top:8px">Batal</button>
+            <div id="modalLoading" style="display:none; text-align:center; margin-top:16px"><div class="spinner"></div><p>Memproses...</p></div>
         </div>
     </div>
-    
-    <div class="header">
-        <h1>Top Up Game</h1>
-        <p>Pilih game favoritmu, bayar pakai QRIS</p>
-    </div>
-    
-    <div class="search-box">
-        <input type="text" id="searchInput" placeholder="Cari game... (Mobile Legends, Free Fire, dll)">
-        <button id="searchBtn">Cari</button>
-    </div>
-    
-    <div id="gamesContainer">
-        <div class="loading"><div class="spinner"></div>Memuat daftar game...</div>
-    </div>
-    
-    <div id="selectedGameSection" style="display:none">
-        <div class="selected-game" id="selectedGameInfo"></div>
-        <div id="itemsContainer"></div>
-    </div>
-</div>
 
-<!-- Modal untuk input User ID -->
-<div id="modal" class="modal">
-    <div class="modal-content">
-        <h3 id="modalTitle">Masukkan User ID / Nomor HP</h3>
-        <input type="text" id="userIdInput" placeholder="Masukkan User ID atau Nomor HP">
-        <button id="confirmBtn">Buat QRIS</button>
-        <button id="closeModalBtn" class="back-btn" style="margin-top:12px">Batal</button>
-        <div id="modalLoading" style="display:none; text-align:center; margin-top:16px">
-            <div class="spinner"></div>
-            <p>Memproses...</p>
+    <!-- MODAL HASIL QRIS -->
+    <div id="qrModal" class="modal">
+        <div class="modal-content qr-result">
+            <h3>✅ QRIS Siap Discan</h3>
+            <img id="qrResultImg" src="" alt="QRIS">
+            <div id="qrResultInfo"></div>
+            <button id="downloadQrBtn" style="background:#10b981; margin-bottom:8px">💾 Download QRIS</button>
+            <button id="closeQrModalBtn" style="background:#94a3b8">Tutup</button>
         </div>
     </div>
-</div>
 
-<!-- Modal untuk hasil QRIS -->
-<div id="qrModal" class="modal">
-    <div class="modal-content qr-result">
-        <h3>✅ QRIS Siap Discan</h3>
-        <img id="qrResultImg" src="" alt="QRIS">
-        <div id="qrResultInfo"></div>
-        <button id="downloadQrBtn" style="background:#10b981; margin-bottom:8px">💾 Download QRIS</button>
-        <button id="closeQrModalBtn" class="back-btn">Tutup</button>
-    </div>
-</div>
+    <script>
+        // MENU HAMBURGER
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        function openMenu() { sidebar.classList.add('open'); overlay.classList.add('show'); document.body.style.overflow = 'hidden'; }
+        function closeMenu() { sidebar.classList.remove('open'); overlay.classList.remove('show'); document.body.style.overflow = ''; }
+        hamburgerBtn.addEventListener('click', openMenu);
+        overlay.addEventListener('click', closeMenu);
+        document.querySelectorAll('.menu-items a').forEach(link => link.addEventListener('click', closeMenu));
 
-<script>
-    const API_URL = "/api/itemku";
-    let selectedGame = null;
-    let selectedItem = null;
-    let currentScreenshot = null;
-    
-    async function loadGames(search = '') {
-        const gamesContainer = document.getElementById('gamesContainer');
-        gamesContainer.innerHTML = '<div class="loading"><div class="spinner"></div>Memuat daftar game...</div>';
+        // SCRIPT GAMES (sama seperti sebelumnya)
+        const API_URL = "/api/itemku";
+        let selectedGame = null;
+        let selectedItem = null;
+        let currentScreenshot = null;
         
-        try {
-            let url = `${API_URL}?action=getGames`;
-            if (search) {
-                url = `https://www.itemku.com/topup-game?q=${encodeURIComponent(search)}`;
-                // Fallback ke scraping langsung
-                const resp = await fetch(`/api/itemku?action=getGames&search=${encodeURIComponent(search)}`);
+        async function loadGames(search = '') {
+            const gamesContainer = document.getElementById('gamesContainer');
+            gamesContainer.innerHTML = '<div class="loading"><div class="spinner"></div>Memuat daftar game...</div>';
+            try {
+                const resp = await fetch(`${API_URL}?action=getGames&search=${encodeURIComponent(search)}`);
                 const data = await resp.json();
                 displayGames(data.games || []);
+            } catch (error) {
+                gamesContainer.innerHTML = '<div class="loading">Gagal memuat game. <button onclick="loadGames()">Coba Lagi</button></div>';
+            }
+        }
+        
+        function displayGames(games) {
+            const gamesContainer = document.getElementById('gamesContainer');
+            if (!games || games.length === 0) {
+                gamesContainer.innerHTML = '<div class="loading">Tidak ada game ditemukan</div>';
                 return;
             }
-            
-            const resp = await fetch(url);
-            const data = await resp.json();
-            displayGames(data.games || []);
-        } catch (error) {
-            gamesContainer.innerHTML = `<div class="loading">Gagal memuat game. <button onclick="loadGames()">Coba Lagi</button></div>`;
-        }
-    }
-    
-    function displayGames(games) {
-        const gamesContainer = document.getElementById('gamesContainer');
-        
-        if (!games || games.length === 0) {
-            gamesContainer.innerHTML = '<div class="loading">Tidak ada game ditemukan</div>';
-            return;
+            gamesContainer.innerHTML = `<div class="section-title">🎮 Populer Games</div><div class="games-grid">${games.map(game => `<div class="game-card" onclick='selectGame("${game.name.replace(/'/g, "\\'")}", "${game.image || ''}")'>${game.image ? `<img src="${game.image}" onerror="this.style.display=\'none\'">` : '<span style="font-size:2rem">🎮</span>'}<h3>${game.name}</h3></div>`).join('')}</div>`;
         }
         
-        gamesContainer.innerHTML = `
-            <div class="section-title">🎮 Populer Games</div>
-            <div class="games-grid">
-                ${games.map(game => `
-                    <div class="game-card" onclick="selectGame('${game.name.replace(/'/g, "\\'")}', '${game.image || ''}')">
-                        ${game.image ? `<img src="${game.image}" alt="${game.name}" onerror="this.src='https://via.placeholder.com/80'">` : '<div style="width:80px;height:80px;background:#e2e8f0;border-radius:50%;margin:0 auto 12px;display:flex;align-items:center;justify-content:center">🎮</div>'}
-                        <h3>${game.name}</h3>
-                    </div>
-                `).join('')}
-            </div>
-        `;
-    }
-    
-    async function selectGame(gameName, gameImage) {
-        selectedGame = { name: gameName, image: gameImage };
+        async function selectGame(gameName, gameImage) {
+            selectedGame = { name: gameName, image: gameImage };
+            document.getElementById('selectedGameSection').style.display = 'block';
+            document.getElementById('selectedGameInfo').innerHTML = `${gameImage ? `<img src="${gameImage}" style="width:40px;height:40px">` : '<span style="font-size:2rem">🎮</span>'}<span style="flex:1"><strong>${gameName}</strong></span><button class="clear-btn" onclick="clearSelectedGame()">Ganti Game</button>`;
+            document.getElementById('itemsContainer').innerHTML = '<div class="loading"><div class="spinner"></div>Memuat item...</div>';
+            try {
+                const resp = await fetch(`${API_URL}?action=getItems&game=${encodeURIComponent(gameName)}`);
+                const data = await resp.json();
+                if (data.success && data.items && data.items.length > 0) {
+                    document.getElementById('itemsContainer').innerHTML = `<div class="section-title">📦 Pilih Item</div><div class="items-grid">${data.items.map(item => `<div class="item-card" onclick='selectItem("${item.name.replace(/'/g, "\\'")}", "${item.price}", "${item.image || ''}", "${item.url || ''}")'><h4>${item.name.substring(0, 40)}</h4><div class="price">${item.priceText}</div></div>`).join('')}</div>`;
+                } else {
+                    document.getElementById('itemsContainer').innerHTML = '<div class="loading">Tidak ada item ditemukan</div>';
+                }
+            } catch (error) {
+                document.getElementById('itemsContainer').innerHTML = '<div class="loading">Gagal memuat item</div>';
+            }
+        }
         
-        const selectedSection = document.getElementById('selectedGameSection');
-        const selectedInfo = document.getElementById('selectedGameInfo');
-        const itemsContainer = document.getElementById('itemsContainer');
+        function clearSelectedGame() { selectedGame = null; document.getElementById('selectedGameSection').style.display = 'none'; }
         
-        selectedInfo.innerHTML = `
-            ${gameImage ? `<img src="${gameImage}" onerror="this.style.display='none'">` : '<span style="font-size:2rem">🎮</span>'}
-            <span style="flex:1"><strong>${gameName}</strong></span>
-            <button class="clear-btn" onclick="clearSelectedGame()">Ganti Game</button>
-        `;
+        function selectItem(itemName, price, image, url) {
+            selectedItem = { name: itemName, price: price, url: url };
+            document.getElementById('modalTitle').innerHTML = `🎮 ${selectedGame.name}<br><span style="font-size:14px">${itemName}</span><br>💰 ${new Intl.NumberFormat('id-ID').format(price)}`;
+            document.getElementById('modal').style.display = 'flex';
+        }
         
-        selectedSection.style.display = 'block';
-        itemsContainer.innerHTML = '<div class="loading"><div class="spinner"></div>Memuat item...</div>';
+        document.getElementById('confirmBtn').onclick = async () => {
+            const userId = document.getElementById('userIdInput').value.trim();
+            if (!userId) { alert('Masukkan User ID'); return; }
+            document.getElementById('modalLoading').style.display = 'block';
+            document.getElementById('confirmBtn').disabled = true;
+            try {
+                let itemId = '';
+                if (selectedItem.url) { const match = selectedItem.url.match(/\/item\/(\d+)/); if (match) itemId = match[1]; }
+                const resp = await fetch(`${API_URL}?action=generateQRIS&itemId=${itemId}&phone=${encodeURIComponent(userId)}`);
+                const data = await resp.json();
+                if (data.success && data.screenshot) {
+                    currentScreenshot = data.screenshot;
+                    document.getElementById('qrResultImg').src = `data:image/png;base64,${data.screenshot}`;
+                    document.getElementById('qrResultInfo').innerHTML = `<div style="margin:12px 0; text-align:left"><p><strong>🎮 Game:</strong> ${selectedGame.name}</p><p><strong>📦 Item:</strong> ${selectedItem.name}</p><p><strong>🆔 User ID:</strong> ${userId}</p><p><strong>🆔 Trx ID:</strong> ${data.trxId}</p></div>`;
+                    document.getElementById('modal').style.display = 'none';
+                    document.getElementById('qrModal').style.display = 'flex';
+                    document.getElementById('userIdInput').value = '';
+                } else { alert('Gagal: ' + (data.error || 'Unknown error')); }
+            } catch (error) { alert('Error: ' + error.message); }
+            finally { document.getElementById('modalLoading').style.display = 'none'; document.getElementById('confirmBtn').disabled = false; }
+        };
         
-        try {
-            const resp = await fetch(`${API_URL}?action=getItems&game=${encodeURIComponent(gameName)}`);
-            const data = await resp.json();
-            
-            if (data.success && data.items && data.items.length > 0) {
-                itemsContainer.innerHTML = `
-                    <div class="section-title">📦 Pilih Item</div>
-                    <div class="items-grid">
-                        ${data.items.map(item => `
-                            <div class="item-card" onclick="selectItem('${item.name.replace(/'/g, "\\'")}', '${item.price}', '${item.image || ''}', '${item.url || ''}')">
-                                ${item.image ? `<img src="${item.image}" onerror="this.style.display='none'">` : '<span style="font-size:2rem">📦</span>'}
-                                <h4>${item.name.substring(0, 40)}</h4>
-                                <div class="price">${item.priceText}</div>
+        document.getElementById('downloadQrBtn').onclick = () => { if (currentScreenshot) { const link = document.createElement('a'); link.download = `QRIS_${selectedGame?.name || 'game'}_${Date.now()}.png`; link.href = `data:image/png;base64,${currentScreenshot}`; link.click(); } };
+        document.getElementById('closeModalBtn').onclick = () => { document.getElementById('modal').style.display = 'none'; document.getElementById('userIdInput').value = ''; };
+        document.getElementById('closeQrModalBtn').onclick = () => { document.getElementById('qrModal').style.display = 'none'; };
+        document.getElementById('searchBtn').onclick = () => { loadGames(document.getElementById('searchInput').value); };
+        loadGames();
+    </script>
+</body>
+</html>tem.priceText}</div>
                             </div>
                         `).join('')}
                     </div>
