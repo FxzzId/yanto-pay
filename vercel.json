@@ -16,6 +16,10 @@
       "dest": "/api/$1"
     },
     {
+      "src": "/games",
+      "dest": "/public/games.html"
+    },
+    {
       "src": "/(.*)",
       "dest": "/public/$1"
     }
